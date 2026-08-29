@@ -2,18 +2,20 @@ import ollama
 
 model = "qwen2.5:14b"
 
-print("What are we working on today?\n\n")
+print("\nWelcome to Scarlett. What are we working on today?\n\n")
 
 conversation = []
 
 while True:
 
     request = input("You:\n")
-    
-    if request == "exit":
+
+    command_request = request.lower().strip()
+
+    if command_request == "exit":
         break
 
-    elif request == "help":
+    elif command_request == "help":
         print("""\nScarlett commands:
 
         about - Learn about Scarlett and what she can do.
@@ -22,7 +24,8 @@ while True:
 
         exit - Exit Scarlett and return to shell.\n""")
         continue
-    elif request == "about":
+
+    elif command_request == "about":
         print("""\nAbout Scarlett:
 
         Scarlett is a linux-first development companion built to help new and learning developers work through real projects while developing their skills.

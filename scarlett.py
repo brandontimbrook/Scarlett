@@ -1,4 +1,8 @@
+import os
+import subprocess
+
 import ollama
+
 
 model = "qwen2.5:14b"
 
@@ -33,6 +37,17 @@ while True:
         The goal is to make Python, Git, Linux, and other development tools easier to learn by providing guidance directly from the terminal.
 
         Scarlett is in early development. More tools and capabilities will be added as the project grows.\n""")
+        continue
+
+    elif command_request == "status":
+        current_directory = os.getcwd()
+        git_check = subprocess.run(
+                ["git", "rev-parse", "--is-inside-work-tree"],
+                capture_output=True
+                )
+        if git_check.returncode == 0:
+            print("\nGit repository: Yes\n")
+        else:print("\nGit repository: No\n")
         continue
 
     conversation.append(

@@ -112,16 +112,30 @@ while True:
         }
         )
 
-    response = ollama.chat(model=model, messages=conversation)
+    response = ollama.chat(
+            model=model,
+            messages=conversation,
+            stream=True
+            )
+
+    full_response = ""
+
+    print("\nScarlett:")
+
+    for chunk in response:
+        chunk_piece = chunk.message.content
+        print(chunk_piece, end="", flush=True)
+        full_response += chunk_piece
+
+    print("\n")
 
     conversation.append(
         {
 		"role": "assistant",
-        "content": response.message.content
+        "content": full_response
         }
         )
 
-    print(f"\nScarlett:\n{response.message.content}\n")
 
 
 

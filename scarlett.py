@@ -16,7 +16,7 @@ while True:
 
     command_request = request.lower().strip()
 
-    if command_request == "exit":
+    if command_request in ("exit", "close", "quit"):
         break
 
     elif command_request == "help":
@@ -40,14 +40,58 @@ while True:
         continue
 
     elif command_request == "status":
-        current_directory = os.getcwd()
+        cwd = os.getcwd()
+        
         git_check = subprocess.run(
                 ["git", "rev-parse", "--is-inside-work-tree"],
                 capture_output=True
                 )
         if git_check.returncode == 0:
-            print("\nGit repository: Yes\n")
-        else:print("\nGit repository: No\n")
+            print(f"\n{'Git Repository:':<24} Yes")
+            print(f"{'Current Directory:':<24} {cwd}")
+        
+            branch_check = subprocess.run(
+                     ["git", "branch", "--show-current"],
+                     capture_output=True,
+                     text=True
+                     )
+            tree_check = subprocess.run(
+                    ["git", "status", "--porcelain"],
+                    capture_output=True,
+                    text=True
+                    )
+            local_commits  = subprocess.run(
+                    ["git", "rev-list", "--count", "@{u}..HEAD"],
+                    capture_output=True,
+                    text=True
+                    )
+            remote_commits = subprocess.run(
+                    ["git", "rev-list", "--count", "HEAD..@{u}"],
+                    capture_output=True,
+                    text=True
+                    )
+            if branch_check.returncode == 0:
+                print(f"{'Git Branch:':<24} {branch_check.stdout.strip()}")
+
+                if tree_check.stdout == "":
+                    print(f"{'Working Tree:':<24} Clean")
+                    print(f"{'Uncommitted Changes:':<24} 0")
+                    print(f"{'Unpushed Commits:':<24} {local_commits.stdout.strip()}")
+                    print(f"{'Remote Commits:':<24} {remote_commits.stdout.strip()}\n")
+
+                elif tree_check.stdout != "":
+
+                    print(f"{'Working Tree:':<24} Modified")
+                    print(f"{'Uncommitted Changes:':<24} {tree_check.stdout.strip()}")
+                    print(f"{'Unpushed Commits:':<24} {local_commits.stdout.strip()}")
+                    print(f"{'Remote Commits:':<24} {remote_commits.stdout.strip()}\n")
+
+
+
+        else:
+            print(f"\n{'Git Repository:':<24} No")
+            print(f"{'Current Directory:':<24} {cwd}")
+
         continue
 
     conversation.append(

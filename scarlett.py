@@ -26,7 +26,9 @@ while True:
 
         help - Show this list of available commands.
 
-        exit - Exit Scarlett and return to shell.\n""")
+        status - Show the current project and Git status.
+
+        exit / close / quit - Exit Scarlett and return to shell.\n""")
         continue
 
     elif command_request == "about":
